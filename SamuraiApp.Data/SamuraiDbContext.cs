@@ -13,6 +13,8 @@ namespace SamuraiApp.Data
         public DbSet<Quote> Quotes { get; set; }
         public DbSet<Clan> Clans { get; set; }
 
+        public DbSet<Battle> Battles  { get; set; }
+
         // One way to add connection string
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -25,6 +27,9 @@ namespace SamuraiApp.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SamuraiBattle>().HasKey(sb => new { sb.SamuraiId, sb.BattleId});
+            // since Horse is not added as DBSet but as navigation property inside Samurai,
+            // EF will create a table as Horse, but to pluralize that we use fluent api here
+            modelBuilder.Entity<Horse>().ToTable("Horses");
             base.OnModelCreating(modelBuilder);
         }
 

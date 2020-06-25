@@ -22,5 +22,11 @@ namespace SamuraiApp.Data
             //base.OnConfiguring(optionsBuilder);
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SamuraiBattle>().HasKey(sb => new { sb.SamuraiId, sb.BattleId});
+            base.OnModelCreating(modelBuilder);
+        }
+
     }
 }

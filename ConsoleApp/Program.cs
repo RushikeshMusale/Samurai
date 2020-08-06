@@ -13,11 +13,27 @@ namespace ConsoleApp
         private static void Main(string[] args)
         {
             context.Database.EnsureCreated();
-            GetSamurais("Before Add:");
-            AddSamurai();
-            GetSamurais("After Add:");
+
+            InsertMultipleSamurais();
+
+            //GetSamurais("Before Add:");
+            //AddSamurai();
+            //GetSamurais("After Add:");
             Console.Write("Press any key...");
             Console.ReadKey();
+        }
+
+        private static void InsertMultipleSamurais()
+        {
+            var samurai = new Samurai { Name = "Jack" };
+            var samurai2 = new Samurai { Name = "Black Jack" };
+            var samurai3 = new Samurai { Name = "Ronian" };
+            var samurai4 = new Samurai { Name = "Crack" };
+            // If the number of samurais are less than 4, then there will be separate command sent to sql server
+            // otherwise single command will be executed for inserting
+            context.Samurais.AddRange(samurai, samurai2,samurai3, samurai4);
+
+            context.SaveChanges();
         }
 
         private static void AddSamurai()

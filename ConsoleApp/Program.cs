@@ -14,7 +14,12 @@ namespace ConsoleApp
         private static void Main(string[] args)
         {
             context.Database.EnsureCreated();
-            DisconnectedAttachedAddChild();
+            DisconnectedAttachRemoveChild();
+            //DisconnectedUpdateRemoveChild();
+
+            //DisconnectedAttachUpdateChild();
+            //DisconnectedUpdateChild();
+            //DisconnectedAttachedAddChild();
             //DisconnectedAddChild();
 
             //QueryAndUpdate_DisconnecteScenario();
@@ -30,6 +35,36 @@ namespace ConsoleApp
 
 
         }
+
+        private static void DisconnectedUpdateRemoveChild()
+        {
+            var samurai = context.Samurais.Include(s => s.Quotes).FirstOrDefault();
+            var quote = samurai.Quotes.First();
+
+            samurai.Quotes.Remove(quote); // THIS WILL NOT DELETE THE QUOTE
+            // disconnected scenario
+            using (var dbContext = new SamuraiDbContext())
+            {
+                dbContext.Samurais.Update(samurai);
+                dbContext.SaveChanges();
+            }
+        }
+
+
+        private static void DisconnectedAttachRemoveChild()
+        {
+            var samurai = context.Samurais.Include(s => s.Quotes).FirstOrDefault();
+            var quote = samurai.Quotes.First();
+
+            samurai.Quotes.Remove(quote); // THIS WILL NOT DELETE THE QUOTE
+            // disconnected scenario
+            using (var dbContext = new SamuraiDbContext())
+            {
+                dbContext.Samurais.Attach(samurai);
+                dbContext.SaveChanges();
+            }
+        }
+
 
         private static void DisconnectedAddChild()
         {
@@ -53,6 +88,39 @@ namespace ConsoleApp
             }
         }
 
+        private static void DisconnectedUpdateChild()
+        {
+            var samurai = context.Samurais.Include(s=>s.Quotes).FirstOrDefault();
+            var quote = samurai.Quotes.First();
+
+            quote.Text += "1";
+            // disconnected scenario
+            using (var dbContext = new SamuraiDbContext())
+            {
+                //  since we are updating on samurai object & included quotes, 
+                // all the quotes will be updated, even if we modified only first
+                dbContext.Samurais.Update(samurai);
+                dbContext.SaveChanges();
+            }
+        }
+
+        private static void DisconnectedAttachUpdateChild()
+        {
+            var samurai = context.Samurais.Include(s => s.Quotes).FirstOrDefault();
+            var quote = samurai.Quotes.First();
+
+            quote.Text += "1";
+            // disconnected scenario
+            using (var dbContext = new SamuraiDbContext())
+            {
+                // In this case, nothing will be updated in the database
+                // attach can only identify addition
+                dbContext.Samurais.Attach(samurai);
+                dbContext.SaveChanges();
+            }
+        }
+
+
         private static void DisconnectedAttachedAddChild()
         {
             var samurai = context.Samurais.FirstOrDefault();
@@ -70,7 +138,7 @@ namespace ConsoleApp
                 //    1. will insert new quote, 
                 //    2. update its identity, 
                 //    3. set samurai id
-                //    4. But it will NOT update remaining scalar properties will be set in different query               
+                //    4. But it will NOT update remaining properties will be set in different query               
                 dbContext.Samurais.Attach(samurai);
                 dbContext.SaveChanges();
             }

@@ -15,6 +15,7 @@ namespace ConsoleApp
         {
             context.Database.EnsureCreated();
 
+            DisconnectedAddChild();
 
             QueryAndUpdate_DisconnecteScenario();
             //DifferenceBetweenFindAndWhere();
@@ -28,6 +29,28 @@ namespace ConsoleApp
             Console.ReadKey();
 
 
+        }
+
+        private static void DisconnectedAddChild()
+        {
+            var samurai = context.Samurais.FirstOrDefault();
+            var quote = new Quote { Text = "I have come to save you" };
+
+            samurai.Quotes.Add(quote);
+
+            // disconnected scenario
+            using (var dbContext = new SamuraiDbContext())
+            {
+                // update is smart enough to understand that child object quote has blank identity,
+                // and the samurai id (parent)
+                // so generated db query:
+                //    1. will insert new quote, 
+                //    2. update its identity, 
+                //    3. set samurai id
+                //    4. since we are updating on samurai object, remaining scalar properties will be set in different query
+                dbContext.Samurais.Update(samurai);
+                dbContext.SaveChanges();
+            }
         }
 
         private static void QueryAndUpdate_DisconnecteScenario()

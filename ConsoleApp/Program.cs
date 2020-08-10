@@ -15,9 +15,11 @@ namespace ConsoleApp
         {
             context.Database.EnsureCreated();
 
-            DifferenceBetweenFindAndWhere();
 
-            InsertMultipleSamurais();
+            QueryAndUpdate_DisconnecteScenario();
+            //DifferenceBetweenFindAndWhere();
+
+            //InsertMultipleSamurais();
 
             //GetSamurais("Before Add:");
             //AddSamurai();
@@ -26,6 +28,21 @@ namespace ConsoleApp
             Console.ReadKey();
 
 
+        }
+
+        private static void QueryAndUpdate_DisconnecteScenario()
+        {
+            Battle battle = context.Battles.AsNoTracking().FirstOrDefault();
+            battle.EndDate = DateTime.Now.AddDays(2);
+
+            using (var dbcontext = new SamuraiDbContext())
+            {
+                // this will cause to start tracking the changes
+                // it will fire a db query which updates all the scalar fields of battle:
+                // NOTE: it will not update complex fields
+                dbcontext.Battles.Update(battle);
+                dbcontext.SaveChanges();
+            }
         }
 
         private static void DifferenceBetweenFindAndWhere()

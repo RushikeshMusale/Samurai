@@ -14,10 +14,10 @@ namespace ConsoleApp
         private static void Main(string[] args)
         {
             context.Database.EnsureCreated();
+            DisconnectedAttachedAddChild();
+            //DisconnectedAddChild();
 
-            DisconnectedAddChild();
-
-            QueryAndUpdate_DisconnecteScenario();
+            //QueryAndUpdate_DisconnecteScenario();
             //DifferenceBetweenFindAndWhere();
 
             //InsertMultipleSamurais();
@@ -52,6 +52,30 @@ namespace ConsoleApp
                 dbContext.SaveChanges();
             }
         }
+
+        private static void DisconnectedAttachedAddChild()
+        {
+            var samurai = context.Samurais.FirstOrDefault();
+            var quote = new Quote { Text = "I have come to save you" };
+
+            samurai.Quotes.Add(quote);
+            samurai.Name += "2"; // Name will be updated in update(), but not in attach()
+
+            // disconnected scenario
+            using (var dbContext = new SamuraiDbContext())
+            {
+                // Attach is smart enough to understand that child object quote has blank identity,
+                // and the samurai id (parent)
+                // so generated db query:
+                //    1. will insert new quote, 
+                //    2. update its identity, 
+                //    3. set samurai id
+                //    4. But it will NOT update remaining scalar properties will be set in different query               
+                dbContext.Samurais.Attach(samurai);
+                dbContext.SaveChanges();
+            }
+        }
+
 
         private static void QueryAndUpdate_DisconnecteScenario()
         {

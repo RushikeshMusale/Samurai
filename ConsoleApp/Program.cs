@@ -14,6 +14,10 @@ namespace ConsoleApp
         private static void Main(string[] args)
         {
             context.Database.EnsureCreated();
+
+            // quering on the models which DBSet<> property is not available in the Context
+            var horse = context.Set<Horse>().Where(x => x.Id == 3);
+
             TrackingInProjection();
             //DisconnectedAttachRemoveChild();
             //DisconnectedUpdateRemoveChild();

@@ -14,7 +14,8 @@ namespace ConsoleApp
         private static void Main(string[] args)
         {
             context.Database.EnsureCreated();
-            DisconnectedAttachRemoveChild();
+            TrackingInProjection();
+            //DisconnectedAttachRemoveChild();
             //DisconnectedUpdateRemoveChild();
 
             //DisconnectedAttachUpdateChild();
@@ -34,6 +35,27 @@ namespace ConsoleApp
             Console.ReadKey();
 
 
+        }
+
+        private static void TrackingInProjection()
+        {
+            var samuraiWithQuotes = context.Samurais
+                                        .Select(s => new
+                                        {
+
+                                            samurai = s,
+                                            quotes = s.Quotes
+                                                        .Select(q=>q.Text)
+                                                        .First()
+                                                        
+                                        })
+                                        .FirstOrDefault();
+
+            //this property will be readonly
+            //samuraiWithQuotes.quotes += "1";
+
+            // this will be tracked
+            samuraiWithQuotes.samurai.Name += "@";
         }
 
         private static void DisconnectedUpdateRemoveChild()

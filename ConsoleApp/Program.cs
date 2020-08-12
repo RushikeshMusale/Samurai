@@ -15,7 +15,8 @@ namespace ConsoleApp
         {
             context.Database.EnsureCreated();
 
-            QueryAgainstViews();
+            QueryFromRawSql();
+            //QueryAgainstViews();
 
             // quering on the models which DBSet<> property is not available in the Context
             var horse = context.Set<Horse>().Where(x => x.Id == 3);
@@ -40,6 +41,15 @@ namespace ConsoleApp
             Console.Write("Press any key...");
             Console.ReadKey();
 
+
+        }
+
+        private static void QueryFromRawSql()
+        {
+            var samurais = context.Samurais.FromSqlRaw("select * from samurais").ToList();
+            // since FromSqlRaw returns Iqueryable, we can use linq extension
+            var samuraisFiltered = context.Samurais.FromSqlRaw("select * from samurais")
+                                            .Where(s => s.Name.Contains("Bh")).ToList();
 
         }
 

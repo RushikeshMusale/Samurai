@@ -15,6 +15,7 @@ namespace ConsoleApp
         {
             context.Database.EnsureCreated();
 
+            RunProcedureFromQuery();
             QueryFromRawSql();
             //QueryAgainstViews();
 
@@ -42,6 +43,26 @@ namespace ConsoleApp
             Console.ReadKey();
 
 
+        }
+
+        private static void RunProcedureFromQuery()
+        {
+            var text = "come";
+            // the query or procedure should return all the columns for the tables (for which entity is assigned to)
+            // here we are running query on samurais dbset which is assigned to samurais table
+            // procedure return samuraiId, name, clanId
+            var samurais = context.Samurais
+                                .FromSqlInterpolated($"exec dbo.GetSamuraiWhoSaidAWord {text}")
+                                .ToList();
+
+            int samuriId = 3;
+            // this will not work on samurai
+            //context.Samurais.FromSqlInterpolated($"exec dbo.DeleteQuotesForSmaurai {samuriId}");
+
+            // we have to use executeSqlInterpolated or executeSqlRaw for running queries that does not 
+            // return entity, updates or delete statments
+
+            context.Database.ExecuteSqlRaw("exec dbo.DeleteQuotesForSmaurai {0}", samuriId);
         }
 
         private static void QueryFromRawSql()

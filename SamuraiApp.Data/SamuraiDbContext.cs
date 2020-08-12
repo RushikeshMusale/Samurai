@@ -21,7 +21,7 @@ namespace SamuraiApp.Data
         public static readonly ILoggerFactory ConsoleLoggerFactory
             = LoggerFactory.Create(builder =>
              {
-                 builder
+                 builder                  
                   .AddFilter((category, level) =>
                       category == DbLoggerCategory.Database.Command.Name
                      && level == LogLevel.Information)
@@ -35,7 +35,8 @@ namespace SamuraiApp.Data
 
             optionsBuilder
                 .UseLoggerFactory(ConsoleLoggerFactory)
-                .UseSqlServer("Data Source=(localDB)\\MSSQLLocalDB; Initial Catalog =SamuraiAppData ");
+                .UseSqlServer("Data Source=(localDB)\\MSSQLLocalDB; Initial Catalog =SamuraiAppData ")
+                .EnableSensitiveDataLogging();
             // not needed to call base method
             //base.OnConfiguring(optionsBuilder);
         }

@@ -15,6 +15,8 @@ namespace ConsoleApp
         {
             context.Database.EnsureCreated();
 
+            QueryAgainstViews();
+
             // quering on the models which DBSet<> property is not available in the Context
             var horse = context.Set<Horse>().Where(x => x.Id == 3);
 
@@ -39,6 +41,12 @@ namespace ConsoleApp
             Console.ReadKey();
 
 
+        }
+
+        private static void QueryAgainstViews()
+        {
+            var samuraiBattleStats = context.SamuraiBattleStats.Where(s => s.Name == "Sampson").ToList();
+            //context.SamuraiBattleStats.Find("sampson"); // This will throw exception at run time
         }
 
         private static void TrackingInProjection()

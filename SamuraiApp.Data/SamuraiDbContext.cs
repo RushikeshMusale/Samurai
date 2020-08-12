@@ -16,6 +16,8 @@ namespace SamuraiApp.Data
 
         public DbSet<Battle> Battles { get; set; }
 
+        public DbSet<SamuraiBattleStat> SamuraiBattleStats { get; set; }
+
         public static readonly ILoggerFactory ConsoleLoggerFactory
             = LoggerFactory.Create(builder =>
              {
@@ -44,6 +46,9 @@ namespace SamuraiApp.Data
             // since Horse is not added as DBSet but as navigation property inside Samurai,
             // EF will create a table as Horse, but to pluralize that we use fluent api here
             modelBuilder.Entity<Horse>().ToTable("Horses");
+
+
+            modelBuilder.Entity<SamuraiBattleStat>().HasNoKey().ToView("SamuraiBattleStats");
             base.OnModelCreating(modelBuilder);
         }
 

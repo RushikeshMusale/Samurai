@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using SumaraiApp.Domain;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace SamuraiApp.Data
 {
@@ -18,29 +15,12 @@ namespace SamuraiApp.Data
 
         public DbSet<SamuraiBattleStat> SamuraiBattleStats { get; set; }
 
-        public static readonly ILoggerFactory ConsoleLoggerFactory
-            = LoggerFactory.Create(builder =>
-             {
-                 builder                  
-                  .AddFilter((category, level) =>
-                      category == DbLoggerCategory.Database.Command.Name
-                     && level == LogLevel.Information)
-                  .AddConsole(); // requires package Microsoft.Extensions.Logging.Console
-             });
-
-
-        // One way to add connection string
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public SamuraiDbContext(DbContextOptions<SamuraiDbContext> options): base (options)
         {
-
-            optionsBuilder
-                .UseLoggerFactory(ConsoleLoggerFactory)
-                .UseSqlServer("Data Source=(localDB)\\MSSQLLocalDB; Initial Catalog =SamuraiAppData ")
-                .EnableSensitiveDataLogging();
-            // not needed to call base method
-            //base.OnConfiguring(optionsBuilder);
+            // no logner tracking query
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
-
+          
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SamuraiBattle>().HasKey(sb => new { sb.SamuraiId, sb.BattleId });

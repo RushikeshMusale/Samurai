@@ -16,7 +16,7 @@ namespace SamuraiApp.Tests
         {
             using (var context = new SamuraiDbContext())
             {
-                context.Database.EnsureDeleted();
+                //context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
 
                 var samurai = new Samurai();

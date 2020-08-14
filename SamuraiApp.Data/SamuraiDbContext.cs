@@ -18,7 +18,7 @@ namespace SamuraiApp.Data
         public SamuraiDbContext(DbContextOptions<SamuraiDbContext> options): base (options)
         {
             // no logner tracking query
-            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            //ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         public SamuraiDbContext()
@@ -27,7 +27,10 @@ namespace SamuraiApp.Data
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=(localDB)\\MSSQLLocalDB; Initial Catalog =SamuraiTestData");
+            // if this check is not performed then test will fail, because we are also using in memory provider in our tests
+            // and we can't use two providers at the same time
+            if (!optionsBuilder.IsConfigured)
+                optionsBuilder.UseSqlServer("Data Source=(localDB)\\MSSQLLocalDB; Initial Catalog =SamuraiTestData");
             base.OnConfiguring(optionsBuilder);
         }
 

@@ -20,7 +20,17 @@ namespace SamuraiApp.Data
             // no logner tracking query
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
-          
+
+        public SamuraiDbContext()
+        {
+
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer("Data Source=(localDB)\\MSSQLLocalDB; Initial Catalog =SamuraiTestData");
+            base.OnConfiguring(optionsBuilder);
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SamuraiBattle>().HasKey(sb => new { sb.SamuraiId, sb.BattleId });

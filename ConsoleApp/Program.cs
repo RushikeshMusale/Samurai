@@ -15,14 +15,15 @@ namespace ConsoleApp
         {
             context.Database.EnsureCreated();
 
-            RunProcedureFromQuery();
-            QueryFromRawSql();
+            InsertMultipleSamurais();
+            //RunProcedureFromQuery();
+            //QueryFromRawSql();
             //QueryAgainstViews();
 
             // quering on the models which DBSet<> property is not available in the Context
-            var horse = context.Set<Horse>().Where(x => x.Id == 3);
+            //var horse = context.Set<Horse>().Where(x => x.Id == 3);
 
-            TrackingInProjection();
+            //TrackingInProjection();
             //DisconnectedAttachRemoveChild();
             //DisconnectedUpdateRemoveChild();
 
@@ -241,17 +242,21 @@ namespace ConsoleApp
 
         private static void InsertMultipleSamurais()
         {
-            var samurai = new Samurai { Name = "Jack" };
-            var samurai2 = new Samurai { Name = "Black Jack" };
-            var samurai3 = new Samurai { Name = "Ronian" };
-            var samurai4 = new Samurai { Name = "Crack" };
+            //var samurai = new Samurai { Name = "Jack" };
+            //var samurai2 = new Samurai { Name = "Black Jack" };
+            //var samurai3 = new Samurai { Name = "Ronian" };
+            //var samurai4 = new Samurai { Name = "Crack" };
             // If the number of samurais are less than 4, then there will be separate command sent to sql server
             // otherwise single command will be executed for inserting
-            context.Samurais.AddRange(samurai, samurai2,samurai3, samurai4);
+            //context.Samurais.AddRange(samurai, samurai2,samurai3, samurai4);
 
             //context.Samurais.Where(s=> EF.Functions.Like())
 
-            context.SaveChanges();
+            //context.SaveChanges();
+            var bizData = new BuisnessDataLogic();
+            string[] nameList = new string[] { "Jackie", "Yip Man", "Yoshinara" };
+            bizData.AddMultipleSamurais(nameList);
+                      
         }
 
         private static void AddSamurai()

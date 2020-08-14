@@ -31,10 +31,10 @@ namespace ConsoleApp
             return _context.SaveChanges();
         }
 
-        public int InsertSingleSamurai(string name)
-        {
-            var samurai = new Samurai { Name = name };
+        public int InsertSingleSamurai(Samurai samurai)
+        {            
             _context.Samurais.Add(samurai);
+
             return _context.SaveChanges();
         }
     }
